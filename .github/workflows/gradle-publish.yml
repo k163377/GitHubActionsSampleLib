@@ -20,7 +20,9 @@ jobs:
           java-version: 1.8
           server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
           settings-path: ${{ github.workspace }} # location for the settings.xml file
-
+      - name: Get the tag version  # タグ名を保存する
+        id: get_version
+        run: echo ::set-output
       - name: Build with Gradle
         run: gradle build
 
@@ -31,3 +33,4 @@ jobs:
         env:
           USERNAME: ${{ github.actor }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GRADLE_PUBLISH_VERSION: ${{ steps.get_version.outputs.VERSION }} # タグ名
