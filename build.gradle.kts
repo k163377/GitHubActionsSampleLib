@@ -2,10 +2,31 @@ plugins {
     kotlin("jvm") version "1.4.10"
     id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
     id("jacoco")
+    id("maven-publish")
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("default") {
+            from(components["kotlin"])
+            // src/java配下等にコードが有るならそれらも指定する必要あり
+        }
+    }
+
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/k163377/GitHubActionsSampleLib")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
 }
 
 group = "org.wrongwrong"
-version = "0.1"
+version = System.getenv("GRADLE_PUBLISH_VERSION") ?: "LOCAL"
 
 repositories {
     mavenCentral()
